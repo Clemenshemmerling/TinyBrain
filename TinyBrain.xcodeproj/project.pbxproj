@@ -1,0 +1,661 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4F556AB42DA8ABE300009073 /* TinyBrain Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4F556AB32DA8ABE300009073 /* TinyBrain Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4F556AB52DA8ABE300009073 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F556AA72DA8ABE300009073 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F556AB22DA8ABE300009073;
+			remoteInfo = "TinyBrain Watch App";
+		};
+		4F556AC32DA8ABE500009073 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F556AA72DA8ABE300009073 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F556AB22DA8ABE300009073;
+			remoteInfo = "TinyBrain Watch App";
+		};
+		4F556ACD2DA8ABE500009073 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4F556AA72DA8ABE300009073 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4F556AB22DA8ABE300009073;
+			remoteInfo = "TinyBrain Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4F556AD92DA8ABE500009073 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				4F556AB42DA8ABE300009073 /* TinyBrain Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4F556AAD2DA8ABE300009073 /* TinyBrain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinyBrain.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F556AB32DA8ABE300009073 /* TinyBrain Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TinyBrain Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F556AC22DA8ABE500009073 /* TinyBrain Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TinyBrain Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F556ACC2DA8ABE500009073 /* TinyBrain Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TinyBrain Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		4F556AB72DA8ABE300009073 /* TinyBrain Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "TinyBrain Watch App";
+			sourceTree = "<group>";
+		};
+		4F556AC52DA8ABE500009073 /* TinyBrain Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "TinyBrain Watch AppTests";
+			sourceTree = "<group>";
+		};
+		4F556ACF2DA8ABE500009073 /* TinyBrain Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "TinyBrain Watch AppUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4F556AB02DA8ABE300009073 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F556ABF2DA8ABE500009073 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F556AC92DA8ABE500009073 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4F556AA62DA8ABE300009073 = {
+			isa = PBXGroup;
+			children = (
+				4F556AB72DA8ABE300009073 /* TinyBrain Watch App */,
+				4F556AC52DA8ABE500009073 /* TinyBrain Watch AppTests */,
+				4F556ACF2DA8ABE500009073 /* TinyBrain Watch AppUITests */,
+				4F556AAE2DA8ABE300009073 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4F556AAE2DA8ABE300009073 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4F556AAD2DA8ABE300009073 /* TinyBrain.app */,
+				4F556AB32DA8ABE300009073 /* TinyBrain Watch App.app */,
+				4F556AC22DA8ABE500009073 /* TinyBrain Watch AppTests.xctest */,
+				4F556ACC2DA8ABE500009073 /* TinyBrain Watch AppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4F556AAC2DA8ABE300009073 /* TinyBrain */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F556ADA2DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain" */;
+			buildPhases = (
+				4F556AAB2DA8ABE300009073 /* Resources */,
+				4F556AD92DA8ABE500009073 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F556AB62DA8ABE300009073 /* PBXTargetDependency */,
+			);
+			name = TinyBrain;
+			packageProductDependencies = (
+			);
+			productName = TinyBrain;
+			productReference = 4F556AAD2DA8ABE300009073 /* TinyBrain.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		4F556AB22DA8ABE300009073 /* TinyBrain Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F556AD62DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain Watch App" */;
+			buildPhases = (
+				4F556AAF2DA8ABE300009073 /* Sources */,
+				4F556AB02DA8ABE300009073 /* Frameworks */,
+				4F556AB12DA8ABE300009073 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4F556AB72DA8ABE300009073 /* TinyBrain Watch App */,
+			);
+			name = "TinyBrain Watch App";
+			packageProductDependencies = (
+			);
+			productName = "TinyBrain Watch App";
+			productReference = 4F556AB32DA8ABE300009073 /* TinyBrain Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4F556AC12DA8ABE500009073 /* TinyBrain Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F556ADD2DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain Watch AppTests" */;
+			buildPhases = (
+				4F556ABE2DA8ABE500009073 /* Sources */,
+				4F556ABF2DA8ABE500009073 /* Frameworks */,
+				4F556AC02DA8ABE500009073 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F556AC42DA8ABE500009073 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4F556AC52DA8ABE500009073 /* TinyBrain Watch AppTests */,
+			);
+			name = "TinyBrain Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "TinyBrain Watch AppTests";
+			productReference = 4F556AC22DA8ABE500009073 /* TinyBrain Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4F556ACB2DA8ABE500009073 /* TinyBrain Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F556AE02DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain Watch AppUITests" */;
+			buildPhases = (
+				4F556AC82DA8ABE500009073 /* Sources */,
+				4F556AC92DA8ABE500009073 /* Frameworks */,
+				4F556ACA2DA8ABE500009073 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4F556ACE2DA8ABE500009073 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				4F556ACF2DA8ABE500009073 /* TinyBrain Watch AppUITests */,
+			);
+			name = "TinyBrain Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "TinyBrain Watch AppUITests";
+			productReference = 4F556ACC2DA8ABE500009073 /* TinyBrain Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4F556AA72DA8ABE300009073 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					4F556AAC2DA8ABE300009073 = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					4F556AB22DA8ABE300009073 = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					4F556AC12DA8ABE500009073 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 4F556AB22DA8ABE300009073;
+					};
+					4F556ACB2DA8ABE500009073 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 4F556AB22DA8ABE300009073;
+					};
+				};
+			};
+			buildConfigurationList = 4F556AAA2DA8ABE300009073 /* Build configuration list for PBXProject "TinyBrain" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4F556AA62DA8ABE300009073;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4F556AAE2DA8ABE300009073 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4F556AAC2DA8ABE300009073 /* TinyBrain */,
+				4F556AB22DA8ABE300009073 /* TinyBrain Watch App */,
+				4F556AC12DA8ABE500009073 /* TinyBrain Watch AppTests */,
+				4F556ACB2DA8ABE500009073 /* TinyBrain Watch AppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4F556AAB2DA8ABE300009073 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F556AB12DA8ABE300009073 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F556AC02DA8ABE500009073 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F556ACA2DA8ABE500009073 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4F556AAF2DA8ABE300009073 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F556ABE2DA8ABE500009073 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F556AC82DA8ABE500009073 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4F556AB62DA8ABE300009073 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4F556AB22DA8ABE300009073 /* TinyBrain Watch App */;
+			targetProxy = 4F556AB52DA8ABE300009073 /* PBXContainerItemProxy */;
+		};
+		4F556AC42DA8ABE500009073 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4F556AB22DA8ABE300009073 /* TinyBrain Watch App */;
+			targetProxy = 4F556AC32DA8ABE500009073 /* PBXContainerItemProxy */;
+		};
+		4F556ACE2DA8ABE500009073 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4F556AB22DA8ABE300009073 /* TinyBrain Watch App */;
+			targetProxy = 4F556ACD2DA8ABE500009073 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4F556AD42DA8ABE500009073 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4F556AD52DA8ABE500009073 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		4F556AD72DA8ABE500009073 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = TinyBrain;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clemens.TinyBrain.TinyBrain.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.4;
+			};
+			name = Debug;
+		};
+		4F556AD82DA8ABE500009073 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = TinyBrain;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clemens.TinyBrain.TinyBrain.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.4;
+			};
+			name = Release;
+		};
+		4F556ADB2DA8ABE500009073 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_KEY_CFBundleDisplayName = TinyBrain;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clemens.TinyBrain.TinyBrain;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4F556ADC2DA8ABE500009073 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_KEY_CFBundleDisplayName = TinyBrain;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.clemens.TinyBrain.TinyBrain;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4F556ADE2DA8ABE500009073 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.clemens.TinyBrain.TinyBrain-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TinyBrain Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TinyBrain Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.4;
+			};
+			name = Debug;
+		};
+		4F556ADF2DA8ABE500009073 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.clemens.TinyBrain.TinyBrain-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TinyBrain Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TinyBrain Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.4;
+			};
+			name = Release;
+		};
+		4F556AE12DA8ABE500009073 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.clemens.TinyBrain.TinyBrain-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "TinyBrain Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.4;
+			};
+			name = Debug;
+		};
+		4F556AE22DA8ABE500009073 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.clemens.TinyBrain.TinyBrain-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "TinyBrain Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 11.4;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4F556AAA2DA8ABE300009073 /* Build configuration list for PBXProject "TinyBrain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F556AD42DA8ABE500009073 /* Debug */,
+				4F556AD52DA8ABE500009073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4F556AD62DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F556AD72DA8ABE500009073 /* Debug */,
+				4F556AD82DA8ABE500009073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4F556ADA2DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F556ADB2DA8ABE500009073 /* Debug */,
+				4F556ADC2DA8ABE500009073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4F556ADD2DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F556ADE2DA8ABE500009073 /* Debug */,
+				4F556ADF2DA8ABE500009073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4F556AE02DA8ABE500009073 /* Build configuration list for PBXNativeTarget "TinyBrain Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4F556AE12DA8ABE500009073 /* Debug */,
+				4F556AE22DA8ABE500009073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4F556AA72DA8ABE300009073 /* Project object */;
+}
