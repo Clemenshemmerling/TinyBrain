@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4F556AB42DA8ABE300009073 /* TinyBrain Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4F556AB32DA8ABE300009073 /* TinyBrain Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4FB12E872DAB73DE00025AF2 /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 4FB12E862DAB73DE00025AF2 /* ZipArchive */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FB12E872DAB73DE00025AF2 /* ZipArchive in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +160,7 @@
 			);
 			name = "TinyBrain Watch App";
 			packageProductDependencies = (
+				4FB12E862DAB73DE00025AF2 /* ZipArchive */,
 			);
 			productName = "TinyBrain Watch App";
 			productReference = 4F556AB32DA8ABE300009073 /* TinyBrain Watch App.app */;
@@ -244,6 +247,9 @@
 			);
 			mainGroup = 4F556AA62DA8ABE300009073;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4F556AFF2DAB71B300009073 /* XCRemoteSwiftPackageReference "ZipArchive" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4F556AAE2DA8ABE300009073 /* Products */;
 			projectDirPath = "";
@@ -656,6 +662,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4F556AFF2DAB71B300009073 /* XCRemoteSwiftPackageReference "ZipArchive" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ZipArchive/ZipArchive";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4FB12E862DAB73DE00025AF2 /* ZipArchive */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F556AFF2DAB71B300009073 /* XCRemoteSwiftPackageReference "ZipArchive" */;
+			productName = ZipArchive;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4F556AA72DA8ABE300009073 /* Project object */;
 }
