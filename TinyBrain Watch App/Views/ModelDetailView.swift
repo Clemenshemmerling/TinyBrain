@@ -64,7 +64,7 @@ struct ModelDetailView: View {
         }
 
         isDownloading = true
-        var safeFilename = filename.replacingOccurrences(of: "/", with: "_")
+        _ = filename.replacingOccurrences(of: "/", with: "_")
 
         ModelDownloadService.shared.downloadModel(named: model.id, filename: filename) { url in
             DispatchQueue.main.async {

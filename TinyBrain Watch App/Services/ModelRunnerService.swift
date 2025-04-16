@@ -6,13 +6,15 @@ class RealTokenizer {
     private let reverseVocab: [Int: String]
 
     init?(from path: String) {
+        print("📄 Trying to load tokenizer from path: \(path)")
         guard let data = FileManager.default.contents(atPath: path),
               let raw = try? JSONDecoder().decode([String: Int].self, from: data) else {
-            print("❌ Failed to load vocab from: \(path)")
+            print("❌ Failed to load or decode vocab from: \(path)")
             return nil
         }
         self.vocab = raw
         self.reverseVocab = Dictionary(uniqueKeysWithValues: raw.map { ($1, $0) })
+        print("✅ Tokenizer initialized with \(vocab.count) entries.")
     }
 
     func tokenize(_ text: String) -> [Int] {
@@ -36,16 +38,11 @@ class RealTokenizer {
 class ModelRunnerService {
     static let shared = ModelRunnerService()
     private var model: MLModel?
-
-    private let tokenizer: RealTokenizer? = {
-        if let path = Bundle.main.path(forResource: "tinygpt2_vocab", ofType: "json") {
-            return RealTokenizer(from: path)
-        }
-        return nil
-    }()
+    private var tokenizer: RealTokenizer?
 
     func loadModel(from url: URL) -> Bool {
         let path = url.path
+        print("📦 Attempting to load model from folder: \(path)")
 
         var isDirectory: ObjCBool = false
         let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
@@ -68,7 +65,6 @@ class ModelRunnerService {
                 do {
                     model = try MLModel(contentsOf: modelURL)
                     print("✅ Model loaded successfully from \(modelURL.path)")
-                    return true
                 } catch {
                     print("❌ Failed to load model: \(error.localizedDescription)")
                     return false
@@ -77,6 +73,17 @@ class ModelRunnerService {
                 print("❌ No .mlmodelc found in directory: \(path)")
                 return false
             }
+
+            let tokenizerPath = url.appendingPathComponent("tokenizer/vocab.json").path
+            if FileManager.default.fileExists(atPath: tokenizerPath) {
+                tokenizer = RealTokenizer(from: tokenizerPath)
+                print("✅ Tokenizer loaded from \(tokenizerPath)")
+            } else {
+                tokenizer = nil
+                print("⚠️ No tokenizer found for this model at path: \(tokenizerPath)")
+            }
+
+            return true
         } else {
             do {
                 model = try MLModel(contentsOf: url)
@@ -96,22 +103,39 @@ class ModelRunnerService {
         }
 
         guard let tokenizer = tokenizer else {
-            print("❌ Tokenizer not initialized.")
+            print("❌ Tokenizer not initialized. Please ensure tokenizer/vocab.json exists and is valid.")
             return ("❌ Tokenizer not initialized.", 0)
         }
 
         do {
             let inputIds = tokenizer.tokenize(input)
-            let fixedLength = 5
-            let padded = inputIds + Array(repeating: 0, count: max(0, fixedLength - inputIds.count))
-            let trimmed = padded.prefix(fixedLength)
 
-            let mlArray = try MLMultiArray(shape: [1, NSNumber(value: fixedLength)], dataType: .int32)
-            for (i, token) in trimmed.enumerated() {
+            guard !inputIds.isEmpty else {
+                print("❌ Empty inputIds — tokenizer returned no tokens.")
+                return ("❌ Input too short or unknown tokens.", 0)
+            }
+
+            let fixedLength = 16
+            let clampedIds = Array(inputIds.prefix(fixedLength))
+            let padded = clampedIds + Array(repeating: 0, count: max(0, fixedLength - clampedIds.count))
+
+            let mlArray = try MLMultiArray(shape: [1, 16], dataType: .int32)
+            for (i, token) in padded.prefix(16).enumerated() {
                 mlArray[[0, i] as [NSNumber]] = NSNumber(value: token)
             }
 
-            let inputFeatures = try MLDictionaryFeatureProvider(dictionary: ["input_ids_1": mlArray])
+            let attentionMask = try MLMultiArray(shape: [1, 16], dataType: .int32)
+            for i in 0..<16 {
+                attentionMask[[0, i] as [NSNumber]] = NSNumber(value: i < clampedIds.count ? 1 : 0)
+            }
+
+            print("📤 Sending shape: input_ids = \(mlArray.shape), attention_mask = \(attentionMask.shape)")
+
+            let inputFeatures = try MLDictionaryFeatureProvider(dictionary: [
+                "input_ids": mlArray,
+                "attention_mask": attentionMask
+            ])
+
             let startTime = CFAbsoluteTimeGetCurrent()
             let prediction = try model.prediction(from: inputFeatures)
             let elapsedTime = CFAbsoluteTimeGetCurrent() - startTime
@@ -155,6 +179,7 @@ class ModelRunnerService {
 
             return ("⚠️ No output from model.", 0)
         } catch {
+            print("❌ Prediction failed: \(error.localizedDescription)")
             return ("❌ Prediction failed: \(error.localizedDescription)", 0)
         }
     }

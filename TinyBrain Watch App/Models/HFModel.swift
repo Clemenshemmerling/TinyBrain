@@ -16,6 +16,7 @@ struct HFModel: Codable, Identifiable {
     var downloadableFilename: String?
     var description: String?
     var sizeInBytes: Int?
+    var tokenizerFilenames: [String]?
 
     var sizeFormatted: String {
         guard let size = sizeInBytes else { return "Unknown size" }

@@ -28,15 +28,20 @@ class ModelFetcherService {
 
                 for var model in results {
                     group.enter()
-                    self.getMLModelFileInfo(for: model.id) { fileInfo in
-                        if let fileInfo {
-                            print("✅ \(model.id) has compatible file: \(fileInfo.filename) - \(fileInfo.size ?? 0) bytes")
-                            model.downloadableFilename = fileInfo.filename
-                            model.sizeInBytes = fileInfo.size
-                            model.description = fileInfo.description
+                    self.getModelFileAssets(for: model.id) { assets in
+                        if let assets = assets {
+                            let modelFile = assets.modelFile
+                            print("✅ \(model.id) has model file: \(modelFile.filename)")
+                            model.downloadableFilename = modelFile.filename
+                            model.sizeInBytes = modelFile.size
+                            model.description = modelFile.description
+
+                            // Attach tokenizer files if found
+                            model.tokenizerFilenames = assets.tokenizerFiles.map { $0.filename }
+
                             filteredModels.append(model)
                         } else {
-                            print("❌ \(model.id) does not have a .mlmodelc, .mlpackage, or .mlmodelc.zip file")
+                            print("❌ \(model.id) does not have a compatible model file")
                         }
                         group.leave()
                     }
@@ -55,7 +60,7 @@ class ModelFetcherService {
         }.resume()
     }
 
-    private func getMLModelFileInfo(for modelId: String, completion: @escaping (((filename: String, size: Int?, description: String?))?) -> Void) {
+    private func getModelFileAssets(for modelId: String, completion: @escaping (ModelAssets?) -> Void) {
         guard let url = URL(string: "https://huggingface.co/api/models/\(modelId)") else {
             print("❌ Invalid URL for model: \(modelId)")
             completion(nil)
@@ -71,21 +76,44 @@ class ModelFetcherService {
                 return
             }
 
-            if let file = siblings.first(where: { file in
-                if let filename = file["rfilename"] as? String {
-                    return filename.hasSuffix(".mlpackage") || filename.hasSuffix(".mlmodelc") || filename.hasSuffix(".zip")
+            // Buscar archivo del modelo
+            let modelFile = siblings.compactMap { file -> FileAsset? in
+                guard let filename = file["rfilename"] as? String else { return nil }
+                if filename.hasSuffix(".mlmodelc") || filename.hasSuffix(".mlpackage") || filename.hasSuffix(".zip") {
+                    return FileAsset(filename: filename,
+                                     size: file["size"] as? Int,
+                                     description: (json["cardData"] as? [String: Any])?["description"] as? String)
                 }
-                return false
-            }),
-            let filename = file["rfilename"] as? String {
+                return nil
+            }.first
 
-                let size = file["size"] as? Int
-                let description = (json["cardData"] as? [String: Any])?["description"] as? String
+            // Buscar archivos de tokenizer
+            let tokenizerFiles = siblings.compactMap { file -> FileAsset? in
+                guard let filename = file["rfilename"] as? String else { return nil }
+                if filename == "vocab.json" || filename == "tokenizer.json" || filename == "merges.txt" {
+                    return FileAsset(filename: filename,
+                                     size: file["size"] as? Int,
+                                     description: nil)
+                }
+                return nil
+            }
 
-                completion((filename, size, description))
+            if let modelFile = modelFile {
+                completion(ModelAssets(modelFile: modelFile, tokenizerFiles: tokenizerFiles))
             } else {
                 completion(nil)
             }
         }.resume()
     }
+}
+
+struct FileAsset {
+    let filename: String
+    let size: Int?
+    let description: String?
+}
+
+struct ModelAssets {
+    let modelFile: FileAsset
+    let tokenizerFiles: [FileAsset]
 }
