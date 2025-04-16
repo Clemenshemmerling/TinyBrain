@@ -3,7 +3,7 @@ import CoreML
 
 class RealTokenizer {
     let vocab: [String: Int]
-    private let reverseVocab: [Int: String]
+    let reverseVocab: [Int: String]
 
     init?(from path: String) {
         print("📄 Trying to load tokenizer from path: \(path)")
@@ -115,17 +115,17 @@ class ModelRunnerService {
                 return ("❌ Input too short or unknown tokens.", 0)
             }
 
-            let fixedLength = 16
-            let clampedIds = Array(inputIds.prefix(fixedLength))
-            let padded = clampedIds + Array(repeating: 0, count: max(0, fixedLength - clampedIds.count))
+            let maxSequenceLength = 16
+            let clampedIds = Array(inputIds.prefix(maxSequenceLength))
+            let padded = clampedIds + Array(repeating: 0, count: maxSequenceLength - clampedIds.count)
 
-            let mlArray = try MLMultiArray(shape: [1, 16], dataType: .int32)
-            for (i, token) in padded.prefix(16).enumerated() {
+            let mlArray = try MLMultiArray(shape: [1, NSNumber(value: maxSequenceLength)], dataType: .int32)
+            for (i, token) in padded.enumerated() {
                 mlArray[[0, i] as [NSNumber]] = NSNumber(value: token)
             }
 
-            let attentionMask = try MLMultiArray(shape: [1, 16], dataType: .int32)
-            for i in 0..<16 {
+            let attentionMask = try MLMultiArray(shape: [1, NSNumber(value: maxSequenceLength)], dataType: .int32)
+            for i in 0..<maxSequenceLength {
                 attentionMask[[0, i] as [NSNumber]] = NSNumber(value: i < clampedIds.count ? 1 : 0)
             }
 
