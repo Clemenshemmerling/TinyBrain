@@ -6,15 +6,24 @@ class RealTokenizer {
     let reverseVocab: [Int: String]
 
     init?(from path: String) {
-        print("📄 Trying to load tokenizer from path: \(path)")
-        guard let data = FileManager.default.contents(atPath: path),
-              let raw = try? JSONDecoder().decode([String: Int].self, from: data) else {
-            print("❌ Failed to load or decode vocab from: \(path)")
+        let decoderPath = path.replacingOccurrences(of: "vocab.json", with: "token_decoder.json")
+        print("📄 Trying to load decoder from path: \(decoderPath)")
+        
+        if FileManager.default.fileExists(atPath: decoderPath),
+           let data = FileManager.default.contents(atPath: decoderPath),
+           let raw = try? JSONDecoder().decode([String: String].self, from: data) {
+            
+            self.reverseVocab = raw.reduce(into: [:]) { dict, pair in
+                if let key = Int(pair.key) {
+                    dict[key] = pair.value
+                }
+            }
+            self.vocab = [:]  // Not needed for decoding
+            print("✅ Decoder loaded with \(reverseVocab.count) entries.")
+        } else {
+            print("❌ Failed to load decoder from: \(decoderPath)")
             return nil
         }
-        self.vocab = raw
-        self.reverseVocab = Dictionary(uniqueKeysWithValues: raw.map { ($1, $0) })
-        print("✅ Tokenizer initialized with \(vocab.count) entries.")
     }
 
     func tokenize(_ text: String) -> [Int] {
@@ -31,7 +40,10 @@ class RealTokenizer {
     }
 
     func decode(_ tokens: [Int]) -> String {
-        return tokens.map { reverseVocab[$0] ?? "<?>" }.joined()
+        return tokens
+            .compactMap { reverseVocab[$0] }
+            .joined()
+            .replacingOccurrences(of: "Ġ", with: " ")
     }
 }
 

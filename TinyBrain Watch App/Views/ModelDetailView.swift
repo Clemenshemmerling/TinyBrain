@@ -1,10 +1,3 @@
-//
-//  ModelDetailView.swift
-//  TinyBrain
-//
-//  Created by Clemens Hemmerling on 11/04/25.
-//
-
 import SwiftUI
 
 struct ModelDetailView: View {
@@ -14,46 +7,76 @@ struct ModelDetailView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        VStack(spacing: 10) {
-            Text(model.id)
-                .font(.headline)
-                .multilineTextAlignment(.center)
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [Color.black, Color.blue.opacity(0.6), Color.purple.opacity(0.6)]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea()
 
-            if let tag = model.pipeline_tag {
-                Text("Pipeline: \(tag.capitalized)")
-                    .font(.caption)
-            }
-
-            if let filename = model.downloadableFilename {
-                Text("File: \(filename)")
-                    .font(.caption2)
-                    .foregroundColor(.gray)
-            }
-
-            if isDownloading {
-                ProgressView("Downloading...")
-            } else if downloadSuccess {
-                NavigationLink(destination: ChatView(model: model)) {
-                    Text("Go to Chat")
-                        .bold()
-                        .padding()
-                }
-                .buttonStyle(.borderedProminent)
-            } else {
-                Button("Download Model") {
-                    downloadModel()
-                }
-                .buttonStyle(.borderedProminent)
-            }
-
-            if let error = errorMessage {
-                Text("Error: \(error)")
-                    .foregroundColor(.red)
-                    .font(.footnote)
+            VStack(spacing: 14) {
+                Text(model.id)
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundColor(.white)
                     .multilineTextAlignment(.center)
+
+                if let tag = model.pipeline_tag {
+                    Text("Pipeline: \(tag.capitalized)")
+                        .font(.caption2)
+                        .foregroundColor(.cyan)
+                }
+
+                if let filename = model.downloadableFilename {
+                    Text("File: \(filename)")
+                        .font(.caption2)
+                        .foregroundColor(.gray)
+                }
+
+                if isDownloading {
+                    ProgressView("Downloading...")
+                        .progressViewStyle(CircularProgressViewStyle(tint: .cyan))
+                } else if downloadSuccess {
+                    NavigationLink(destination: ChatView(model: model)) {
+                        Text("Go to Chat")
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundColor(.white)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 20)
+                            .background(
+                                Capsule()
+                                    .fill(LinearGradient(gradient: Gradient(colors: [.green, .blue]), startPoint: .leading, endPoint: .trailing))
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                            )
+                            .shadow(color: .blue.opacity(0.5), radius: 5, x: 0, y: 3)
+                    }
+                } else {
+                    Button(action: downloadModel) {
+                        Text("Download Model")
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundColor(.white)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 20)
+                            .background(
+                                Capsule()
+                                    .fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .leading, endPoint: .trailing))
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                            )
+                            .shadow(color: .orange.opacity(0.5), radius: 5, x: 0, y: 3)
+                    }
+                }
+
+                if let error = errorMessage {
+                    Text("Error: \(error)")
+                        .foregroundColor(.red)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                }
             }
+            .padding()
         }
-        .padding()
         .navigationTitle("Model Info")
     }
 
