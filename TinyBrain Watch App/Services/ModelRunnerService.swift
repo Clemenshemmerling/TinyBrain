@@ -1,221 +1,115 @@
 import Foundation
 import CoreML
 
-class RealTokenizer {
-    let vocab: [String: Int]
-    let reverseVocab: [Int: String]
-
-    init?(from path: String) {
-        let decoderPath = path.replacingOccurrences(of: "vocab.json", with: "token_decoder.json")
-        print("📄 Trying to load decoder from path: \(decoderPath)")
-        
-        if FileManager.default.fileExists(atPath: decoderPath),
-           let data = FileManager.default.contents(atPath: decoderPath),
-           let raw = try? JSONDecoder().decode([String: String].self, from: data) {
-            
-            self.reverseVocab = raw.reduce(into: [:]) { dict, pair in
-                if let key = Int(pair.key) {
-                    dict[key] = pair.value
-                }
-            }
-            self.vocab = [:]  // Not needed for decoding
-            print("✅ Decoder loaded with \(reverseVocab.count) entries.")
-        } else {
-            print("❌ Failed to load decoder from: \(decoderPath)")
-            return nil
-        }
-    }
-
-    func tokenize(_ text: String) -> [Int] {
-        var tokens: [Int] = []
-        for char in text {
-            let str = String(char)
-            if let id = vocab[str] {
-                tokens.append(id)
-            } else {
-                tokens.append(vocab["<unk>"] ?? 0)
-            }
-        }
-        return tokens
-    }
-
-    func decode(_ tokens: [Int]) -> String {
-        return tokens
-            .compactMap { reverseVocab[$0] }
-            .joined()
-            .replacingOccurrences(of: "Ġ", with: " ")
-    }
-}
-
-class ModelRunnerService {
+final class ModelRunnerService {
     static let shared = ModelRunnerService()
     private var model: MLModel?
     private var tokenizer: RealTokenizer?
 
     func loadModel(from url: URL) -> Bool {
-        let path = url.path
-        print("📦 Attempting to load model from folder: \(path)")
+        var isDir: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir) else { return false }
 
-        var isDirectory: ObjCBool = false
-        let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
-
-        guard exists else {
-            print("❌ Path does not exist: \(path)")
-            return false
-        }
-
-        if isDirectory.boolValue {
-            let contents: [URL]
-            do {
-                contents = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
-            } catch {
-                print("❌ Failed to list contents: \(error)")
-                return false
-            }
-
-            if let modelURL = contents.first(where: { $0.pathExtension == "mlmodelc" }) {
-                do {
-                    model = try MLModel(contentsOf: modelURL)
-                    print("✅ Model loaded successfully from \(modelURL.path)")
-                } catch {
-                    print("❌ Failed to load model: \(error.localizedDescription)")
-                    return false
-                }
-            } else {
-                print("❌ No .mlmodelc found in directory: \(path)")
-                return false
-            }
-
-            let tokenizerPath = url.appendingPathComponent("tokenizer/vocab.json").path
-            if FileManager.default.fileExists(atPath: tokenizerPath) {
-                tokenizer = RealTokenizer(from: tokenizerPath)
-                print("✅ Tokenizer loaded from \(tokenizerPath)")
-            } else {
-                tokenizer = nil
-                print("⚠️ No tokenizer found for this model at path: \(tokenizerPath)")
-            }
-
-            return true
+        let modelURL: URL?
+        if isDir.boolValue {
+            modelURL = (try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil))?.first { $0.pathExtension == "mlmodelc" }
         } else {
-            do {
-                model = try MLModel(contentsOf: url)
-                print("✅ Model loaded successfully from \(path)")
-                return true
-            } catch {
-                print("❌ Failed to load model: \(error.localizedDescription)")
-                return false
-            }
+            modelURL = url
         }
+        guard let mURL = modelURL, let m = try? MLModel(contentsOf: mURL) else { return false }
+        model = m
+
+        let bundle = Bundle.main
+        var cand: [String] = []
+        cand.append(url.appendingPathComponent("tokenizer").path)
+        cand.append(url.path)
+        if let p = bundle.path(forResource: "tokenizer", ofType: nil) { cand.append(p) }
+        if let rp = bundle.resourcePath { cand.append(rp) }
+        if let rp = bundle.resourcePath { cand.append((rp as NSString).appendingPathComponent("Models")) }
+
+        for base in cand {
+            if let tok = RealTokenizer(basePath: base) { tokenizer = tok; break }
+        }
+        return tokenizer != nil
     }
 
     func predict(from input: String) -> (text: String, speed: Double) {
-        guard let model = model else {
-            print("⚠️ No model loaded.")
-            return ("⚠️ No model loaded.", 0)
+        guard let model = model else { return ("⚠️ No model loaded.", 0) }
+        guard let tokenizer = tokenizer else { return ("❌ Tokenizer not initialized.", 0) }
+
+        var ids = tokenizer.encode(input)
+        if ids.isEmpty { return ("❌ Input too short or unknown tokens.", 0) }
+
+        let maxLen = 32
+        let maxNew = 32
+        let start = CFAbsoluteTimeGetCurrent()
+
+        for _ in 0..<maxNew {
+            let cur = Array(ids.suffix(maxLen))
+            let padCount = max(0, maxLen - cur.count)
+            let padded = (padCount > 0 ? Array(repeating: tokenizer.pad, count: padCount) : []) + cur
+            let attn = Array(repeating: 1, count: cur.count) + Array(repeating: 0, count: padCount)
+
+            guard
+                let idsArr = try? MLMultiArray(shape: [1, NSNumber(value: maxLen)], dataType: .int32),
+                let maskArr = try? MLMultiArray(shape: [1, NSNumber(value: maxLen)], dataType: .int32)
+            else { break }
+
+            for (i, t) in padded.enumerated() { idsArr[[0, i] as [NSNumber]] = NSNumber(value: t) }
+            for (i, m) in attn.enumerated() { maskArr[[0, i] as [NSNumber]] = NSNumber(value: m) }
+
+            guard
+                let feats = try? MLDictionaryFeatureProvider(dictionary: ["input_ids": idsArr, "attention_mask": maskArr]),
+                let out = try? model.prediction(from: feats),
+                let logits = out.featureNames.compactMap({ out.featureValue(for: $0)?.multiArrayValue }).first
+            else { break }
+
+            let shape = logits.shape.map { $0.intValue }
+            if shape.count != 3 { break }
+            let T = shape[1], V = shape[2]
+            let used = min(cur.count, T)
+            let step = max(used - 1, 0)
+
+            var nextId = 0
+            switch logits.dataType {
+            case .float16:
+                let p = UnsafeMutablePointer<Float16>(OpaquePointer(logits.dataPointer))
+                var best = Float16(-Float.greatestFiniteMagnitude)
+                let base = step * V
+                for v in 0..<V { let val = p[base + v]; if val > best { best = val; nextId = v } }
+            case .float32:
+                let p = UnsafeMutablePointer<Float32>(OpaquePointer(logits.dataPointer))
+                var best: Float32 = -Float.greatestFiniteMagnitude
+                let base = step * V
+                for v in 0..<V { let val = p[base + v]; if val > best { best = val; nextId = v } }
+            case .double:
+                let p = UnsafeMutablePointer<Double>(OpaquePointer(logits.dataPointer))
+                var best: Double = -Double.greatestFiniteMagnitude
+                let base = step * V
+                for v in 0..<V { let val = p[base + v]; if val > best { best = val; nextId = v } }
+            default:
+                break
+            }
+
+            ids.append(nextId)
+            if nextId == tokenizer.eos { break }
         }
 
-        guard let tokenizer = tokenizer else {
-            print("❌ Tokenizer not initialized. Please ensure tokenizer/vocab.json exists and is valid.")
-            return ("❌ Tokenizer not initialized.", 0)
-        }
-
-        do {
-            let inputIds = tokenizer.tokenize(input)
-
-            guard !inputIds.isEmpty else {
-                print("❌ Empty inputIds — tokenizer returned no tokens.")
-                return ("❌ Input too short or unknown tokens.", 0)
-            }
-
-            let maxSequenceLength = 16
-            let clampedIds = Array(inputIds.prefix(maxSequenceLength))
-            let padded = clampedIds + Array(repeating: 0, count: maxSequenceLength - clampedIds.count)
-
-            let mlArray = try MLMultiArray(shape: [1, NSNumber(value: maxSequenceLength)], dataType: .int32)
-            for (i, token) in padded.enumerated() {
-                mlArray[[0, i] as [NSNumber]] = NSNumber(value: token)
-            }
-
-            let attentionMask = try MLMultiArray(shape: [1, NSNumber(value: maxSequenceLength)], dataType: .int32)
-            for i in 0..<maxSequenceLength {
-                attentionMask[[0, i] as [NSNumber]] = NSNumber(value: i < clampedIds.count ? 1 : 0)
-            }
-
-            print("📤 Sending shape: input_ids = \(mlArray.shape), attention_mask = \(attentionMask.shape)")
-
-            let inputFeatures = try MLDictionaryFeatureProvider(dictionary: [
-                "input_ids": mlArray,
-                "attention_mask": attentionMask
-            ])
-
-            let startTime = CFAbsoluteTimeGetCurrent()
-            let prediction = try model.prediction(from: inputFeatures)
-            let elapsedTime = CFAbsoluteTimeGetCurrent() - startTime
-
-            for key in prediction.featureNames {
-                if let array = prediction.featureValue(for: key)?.multiArrayValue {
-                    let shape = array.shape.map { $0.intValue }
-                    guard shape.count == 3 else {
-                        print("❌ Unexpected output shape: \(shape)")
-                        continue
-                    }
-
-                    let T = shape[1]
-                    let V = shape[2]
-
-                    let ptr = UnsafeMutablePointer<Float16>(OpaquePointer(array.dataPointer))
-                    var predictedTokenIndices: [Int] = []
-
-                    for t in 0..<T {
-                        var maxVal: Float16 = Float16(-Float.greatestFiniteMagnitude)
-                        var maxIdx = 0
-
-                        for v in 0..<V {
-                            let idx = t * V + v
-                            let val = ptr[idx]
-                            if val > maxVal {
-                                maxVal = val
-                                maxIdx = v
-                            }
-                        }
-
-                        predictedTokenIndices.append(maxIdx)
-                    }
-
-                    let decoded = tokenizer.decode(predictedTokenIndices)
-                    let tokensPerSecond = Double(predictedTokenIndices.count) / elapsedTime
-
-                    return (decoded, tokensPerSecond)
-                }
-            }
-
-            return ("⚠️ No output from model.", 0)
-        } catch {
-            print("❌ Prediction failed: \(error.localizedDescription)")
-            return ("❌ Prediction failed: \(error.localizedDescription)", 0)
-        }
+        let elapsed = CFAbsoluteTimeGetCurrent() - start
+        let gen = ids.suffix(maxNew)
+        let text = tokenizer.decode(Array(gen))
+        let tps = Double(gen.count) / max(elapsed, 1e-6)
+        return (text, tps)
     }
 
     func getModelMetadata() -> [String] {
-        guard let model = model else {
-            return ["⚠️ No model loaded."]
-        }
-
+        guard let model = model else { return ["⚠️ No model loaded."] }
         var lines: [String] = []
         lines.append("✅ Model loaded successfully")
-
         lines.append("🟢 Inputs:")
-        for (name, desc) in model.modelDescription.inputDescriptionsByName {
-            let type = String(describing: desc.type)
-            lines.append("- \(name): \(type)")
-        }
-
+        for (n, d) in model.modelDescription.inputDescriptionsByName { lines.append("- \(n): \(String(describing: d.type))") }
         lines.append("🔵 Outputs:")
-        for (name, desc) in model.modelDescription.outputDescriptionsByName {
-            let type = String(describing: desc.type)
-            lines.append("- \(name): \(type)")
-        }
-
+        for (n, d) in model.modelDescription.outputDescriptionsByName { lines.append("- \(n): \(String(describing: d.type))") }
         return lines
     }
 }
