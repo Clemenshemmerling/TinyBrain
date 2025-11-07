@@ -1,20 +1,18 @@
 import Foundation
 
 final class RealTokenizer {
-    struct Config: Decodable { let model_max_length: Int? }
     private let vocab: [String:Int]
     private let id2tok: [Int:String]
     private let bpeRanks: [String:Int]
     private let byteEnc: [UInt8:Character]
     private let byteDec: [Character:UInt8]
-    private let pat = try! NSRegularExpression(pattern: #"\'s|\'t|\'re|\'ve|\'m|\'ll|\'d| ?[A-Za-z]+|\d+| ?[^ \r\n\tA-Za-z0-9]+"#, options: [])
+    private let pat = try! NSRegularExpression(pattern: #"\'s|\'t|\'re|\'ve|\'m|\'ll|\'d| ?[A-Za-zÀ-ÿ]+|\d+| ?[^ \r\n\tA-Za-z0-9À-ÿ]+"#, options: [])
     private(set) var pad: Int
     private(set) var eos: Int
 
     init?(basePath: String) {
         let tokJSON = (basePath as NSString).appendingPathComponent("tokenizer.json")
-        let vocabJSON1 = (basePath as NSString).appendingPathComponent("vocab.json")
-        let vocabJSON2 = (basePath as NSString).appendingPathComponent("tinygpt2_vocab.json")
+        let vocabJSON = (basePath as NSString).appendingPathComponent("vocab.json")
         let mergesTXT1 = (basePath as NSString).appendingPathComponent("merges.txt")
         let mergesTXT2 = (basePath as NSString).appendingPathComponent("merges")
         let spMap = (basePath as NSString).appendingPathComponent("special_tokens_map.json")
@@ -26,10 +24,20 @@ final class RealTokenizer {
             if let id = (m["pad_token"] as? [String:Any])?["id"] as? Int { p = id }
             if let id = (m["eos_token"] as? [String:Any])?["id"] as? Int { e = id }
         }
+        pad = p
+        eos = e
 
         var v:[String:Int] = [:]
         var inv:[Int:String] = [:]
         var ranks:[String:Int] = [:]
+
+        if FileManager.default.fileExists(atPath: decJSON),
+           let d2 = try? Data(contentsOf: URL(fileURLWithPath: decJSON)),
+           let map = try? JSONSerialization.jsonObject(with: d2) as? [String:String] {
+            var invAlt:[Int:String]=[:]
+            for (k, tok) in map { if let id = Int(k) { invAlt[id] = tok } }
+            if !invAlt.isEmpty { inv = invAlt }
+        }
 
         if FileManager.default.fileExists(atPath: tokJSON),
            let d = try? Data(contentsOf: URL(fileURLWithPath: tokJSON)),
@@ -38,36 +46,29 @@ final class RealTokenizer {
            let vv = model["vocab"] as? [String:Int],
            let merges = model["merges"] as? [String] {
             v = vv
-            for (t,i) in vv { inv[i] = t }
+            if inv.isEmpty { for (t,i) in vv { inv[i] = t } }
             for (i,m) in merges.enumerated() { ranks[m] = i }
-        } else {
-            let vocabPath = FileManager.default.fileExists(atPath: vocabJSON1) ? vocabJSON1 : vocabJSON2
-            guard FileManager.default.fileExists(atPath: vocabPath),
-                  let d = try? Data(contentsOf: URL(fileURLWithPath: vocabPath)),
-                  let vv = try? JSONSerialization.jsonObject(with: d) as? [String:Int] else { return nil }
-            v = vv
-            for (t,i) in vv { inv[i] = t }
-
-            if FileManager.default.fileExists(atPath: mergesTXT1) || FileManager.default.fileExists(atPath: mergesTXT2) {
-                let mpath = FileManager.default.fileExists(atPath: mergesTXT1) ? mergesTXT1 : mergesTXT2
-                if let s = try? String(contentsOfFile: mpath, encoding: .utf8) {
-                    let lines = s.split(separator: "\n").filter { !$0.hasPrefix("#") }
-                    for (i,line) in lines.enumerated() { ranks[String(line)] = i }
-                }
-            } else if FileManager.default.fileExists(atPath: decJSON),
-                      let d2 = try? Data(contentsOf: URL(fileURLWithPath: decJSON)),
-                      let map = try? JSONSerialization.jsonObject(with: d2) as? [String:String] {
-                var invAlt:[Int:String]=[:]
-                for (k, tok) in map { if let id = Int(k) { invAlt[id] = tok } }
-                if !invAlt.isEmpty { inv = invAlt }
+        } else if FileManager.default.fileExists(atPath: vocabJSON) {
+            if let d = try? Data(contentsOf: URL(fileURLWithPath: vocabJSON)),
+               let vv = try? JSONSerialization.jsonObject(with: d) as? [String:Int] {
+                v = vv
+                if inv.isEmpty { for (t,i) in vv { inv[i] = t } }
             }
+            let mergesPath = FileManager.default.fileExists(atPath: mergesTXT1) ? mergesTXT1 : mergesTXT2
+            if FileManager.default.fileExists(atPath: mergesPath),
+               let s = try? String(contentsOfFile: mergesPath, encoding: .utf8) {
+                let lines = s.split(separator: "\n").filter { !$0.hasPrefix("#") }
+                for (i,line) in lines.enumerated() { ranks[String(line)] = i }
+            } else if inv.isEmpty {
+                return nil
+            }
+        } else {
+            return nil
         }
 
         vocab = v
         id2tok = inv
         bpeRanks = ranks
-        pad = p
-        eos = e
 
         var be:[UInt8:Character]=[:], bd:[Character:UInt8]=[:]
         var bs:[UInt8]=[]
@@ -104,8 +105,7 @@ final class RealTokenizer {
         while true {
             var best:String?
             var rank = Int.max
-            for p in ps { if let r = bpeRanks[p], r < rank { rank = r; best = p }
-            }
+            for p in ps { if let r = bpeRanks[p], r < rank { rank = r; best = p } }
             guard let bp = best else { break }
             let a = String(bp.split(separator: " ")[0])
             let b = String(bp.split(separator: " ")[1])
@@ -124,13 +124,20 @@ final class RealTokenizer {
 
     private func encUTF8(_ s:String) -> String {
         var out = ""
-        for b in s.utf8 { if let c = byteEnc[b] { out.append(c) } }
+        for b in s.utf8 { if let c = byteEnc[b] { out.append(c) } else { out.append(Character(UnicodeScalar(b))) } }
         return out
     }
 
     private func decUTF8(_ s:String) -> String {
-        var bytes:[UInt8]=[]
-        for c in s { if let b = byteDec[c] { bytes.append(b) } }
+        var bytes = Data()
+        for c in s {
+            if let b = byteDec[c] {
+                bytes.append(b)
+            } else {
+                let scalars = String(c).utf8
+                bytes.append(contentsOf: scalars)
+            }
+        }
         return String(decoding: bytes, as: UTF8.self)
     }
 
@@ -153,7 +160,19 @@ final class RealTokenizer {
     func decode(_ tokens:[Int]) -> String {
         var s = ""
         for id in tokens { if let t = id2tok[id] { s.append(t) } }
-        s = s.replacingOccurrences(of: "Ġ", with: " ")
-        return decUTF8(s)
+        var bytes = Data()
+        for c in s {
+            if let b = byteDec[c] {
+                bytes.append(b)
+            } else {
+                let scalars = String(c).utf8
+                bytes.append(contentsOf: scalars)
+            }
+        }
+        var out = String(decoding: bytes, as: UTF8.self)
+        out = out.replacingOccurrences(of: "Ġ", with: " ")
+                 .replacingOccurrences(of: "Ċ", with: "\n")
+        out = out.precomposedStringWithCanonicalMapping
+        return out
     }
 }
